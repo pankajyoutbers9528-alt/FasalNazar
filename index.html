@@ -464,3 +464,216 @@ function renderDiary(){
    renderDiary();
   };
   row.append(t,b);list.append(row);
+
+           });
+ $('diaryTotal').textContent='कुल दर्ज खर्च: ₹'+fmt(total);
+}
+
+function addEntry(){
+ const text=$('entry').value.trim();
+ const amount=Number($('entryAmount').value)||0;
+ const date=$('entryDate').value||new Date().toISOString().slice(0,10);
+
+ if(!text){
+  alert('काम या खर्च का विवरण लिखें।');
+  return;
+ }
+
+ try{
+  const data=entries();
+  data.push({text,amount,date});
+  localStorage.setItem('fasalEntries',JSON.stringify(data));
+  $('entry').value='';
+  $('entryAmount').value='';
+  $('entryDate').value='';
+  renderDiary();
+ }catch(e){
+  alert('डायरी सेव नहीं हो पाई। ब्राउज़र स्टोरेज जाँचें।');
+ }
+}
+
+function getReminders(){
+ try{
+  return JSON.parse(localStorage.getItem('fasalReminders')||'[]');
+ }catch(e){
+  return [];
+ }
+}
+
+function saveReminders(data){
+ localStorage.setItem('fasalReminders',JSON.stringify(data));
+}
+
+function renderReminders(){
+ const box=$('reminderList');
+ if(!box)return;
+
+ const data=getReminders();
+ box.innerHTML='';
+
+ if(!data.length){
+  box.textContent='अभी कोई रिमाइंडर सेव नहीं है।';
+  return;
+ }
+
+ data.forEach((item,index)=>{
+  const row=document.createElement('div');
+  row.className='result';
+
+  const label=document.createElement('span');
+  label.textContent=item.text+' — '+item.date+' '+item.time+' ';
+
+  const del=document.createElement('button');
+  del.textContent='हटाएँ';
+
+  del.onclick=()=>{
+   const list=getReminders();
+   list.splice(index,1);
+   saveReminders(list);
+   renderReminders();
+  };
+
+  row.append(label,del);
+  box.append(row);
+ });
+}
+
+function addReminder(){
+ const text=$('reminderText').value.trim();
+ const date=$('reminderDate').value;
+ const time=$('reminderTime').value;
+
+ if(!text||!date||!time){
+  alert('काम, तारीख और समय भरें।');
+  return;
+ }
+
+ const when=new Date(date+'T'+time);
+
+ if(Number.isNaN(when.getTime())||when.getTime()<=Date.now()){
+  alert('भविष्य की तारीख और समय चुनें।');
+  return;
+ }
+
+ const data=getReminders();
+ data.push({
+  text,
+  date,
+  time,
+  notified:false
+ });
+
+ saveReminders(data);
+
+ $('reminderText').value='';
+ $('reminderDate').value='';
+ $('reminderTime').value='';
+
+ renderReminders();
+}
+
+function enableReminderNotifications(){
+ if(!('Notification' in window)){
+  alert('यह ब्राउज़र नोटिफिकेशन सपोर्ट नहीं करता।');
+  return;
+ }
+
+ Notification.requestPermission().then(permission=>{
+  alert(permission==='granted'
+   ?'नोटिफिकेशन चालू हो गए।'
+   :'नोटिफिकेशन की अनुमति नहीं मिली।');
+ });
+}
+
+function checkReminders(){
+ const data=getReminders();
+ const now=Date.now();
+ let changed=false;
+
+ data.forEach(item=>{
+  const when=new Date(item.date+'T'+item.time).getTime();
+
+  if(!item.notified&&when<=now){
+   if('Notification' in window&&Notification.permission==='granted'){
+    new Notification('FasalNazar रिमाइंडर',{
+     body:item.text
+    });
+   }else{
+    alert('खेती का रिमाइंडर: '+item.text);
+   }
+
+   item.notified=true;
+   changed=true;
+  }
+ });
+
+ if(changed){
+  saveReminders(data);
+  renderReminders();
+ }
+}
+
+const translations={
+ 'टूल्स':'Tools',
+ 'पशुपालन':'Animal Care',
+ 'योजनाएँ':'Schemes',
+ 'डायरी':'Diary',
+ 'स्मार्ट खेती, बेहतर भविष्य 🌱':'Smart Farming, Better Future 🌱',
+ '🌱 खेती के स्मार्ट टूल्स':'🌱 Smart Farming Tools',
+ 'मौसम देखें':'Check Weather',
+ 'भाव खोजें':'Search Market Price',
+ 'गणना करें':'Calculate',
+ 'पानी निकालें':'Calculate Water',
+ 'लाभ निकालें':'Calculate Profit',
+ 'जानकारी देखें':'View Information',
+ 'सलाह देखें':'View Advice',
+ 'मंडी खोजें':'Find Mandi',
+ 'कमाई निकालें':'Calculate Income',
+ 'कुल किराया निकालें':'Calculate Total Rent',
+ 'सेव करें':'Save',
+ 'रिमाइंडर सेव करें':'Save Reminder',
+ 'नोटिफिकेशन अनुमति दें':'Allow Notifications',
+ 'बारिश अलर्ट चालू करें':'Enable Rain Alert',
+ 'पूर्वानुमान देखें':'View Forecast'
+};
+
+let currentLanguage='hi';
+
+function toggleLanguage(){
+ currentLanguage=currentLanguage==='hi'?'en':'hi';
+
+ document.querySelectorAll('button,a,h2,h3').forEach(el=>{
+  if(!el.dataset.hiText){
+   el.dataset.hiText=el.textContent;
+  }
+
+  const hindi=el.dataset.hiText;
+
+  if(currentLanguage==='en'){
+   el.textContent=translations[hindi]||hindi;
+  }else{
+   el.textContent=hindi;
+  }
+ });
+
+ $('languageBtn').textContent=
+  currentLanguage==='hi'?'English':'हिन्दी';
+}
+
+function initializeApp(){
+ $('year').textContent=new Date().getFullYear();
+
+ try{
+  renderDiary();
+  renderReminders();
+ }catch(e){
+  console.error('Initialization error:',e);
+ }
+
+ setInterval(checkReminders,15000);
+}
+
+document.addEventListener('DOMContentLoaded',initializeApp);
+</script>
+</body>
+</html>      
