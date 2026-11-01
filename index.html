@@ -1,13 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FasalNazar 🌾 | किसान सहायक</title>
+<meta name="description" content="किसानों के लिए मौसम, खेती कैलकुलेटर, पशुपालन, मंडी और सरकारी योजनाओं की जानकारी।">
 <style>
 :root{--bg:#f2f8ef;--card:#fff;--text:#183321;--muted:#637568;--green:#218838;--pale:#e4f3df;--border:#dce8d8}
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{margin:0;font:16px/1.6 Arial,sans-serif;background:var(--bg);color:var(--text)}
 body.dark{--bg:#101b13;--card:#1c2b20;--text:#e9f5e9;--muted:#bdcbbb;--pale:#29452e;--border:#354b39}
 header{position:sticky;top:0;z-index:5;background:#14532d;color:white;padding:12px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -15,15 +16,15 @@ header h1{font-size:23px;margin:0}
 nav{display:flex;gap:13px;flex-wrap:wrap}
 nav a{color:white;text-decoration:none;font-weight:bold;font-size:14px}
 button,.btn{background:var(--green);color:white;border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
-header button{background:#fff;color:#14532d}
+header button{background:white;color:#14532d}
 .hero{background:linear-gradient(120deg,#14532d,#4caf50);color:white;text-align:center;padding:48px 16px}
 .hero h2{font-size:34px;margin:0 0 8px}
 .hero p{max-width:700px;margin:auto}
 main{max-width:1100px;margin:auto;padding:20px 15px}
 .section-title{margin:28px 0 14px;color:#14532d}
 body.dark .section-title{color:#9de0a5}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:15px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 3px 12px #0000000b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:15px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 3px 12px #0000000b;min-width:0}
 .card h3{margin:4px 0 6px;color:#17632e}
 body.dark .card h3{color:#9de0a5}
 .card p,.muted{color:var(--muted);font-size:14px}
@@ -40,7 +41,6 @@ html,body{max-width:100%;overflow-x:hidden}
  main{padding:16px 12px}
  .grid{grid-template-columns:minmax(0,1fr)}
  .hero h2{font-size:27px}
- .card{min-width:0}
 }
 </style>
 </head>
@@ -54,7 +54,10 @@ html,body{max-width:100%;overflow-x:hidden}
 <a href="#schemes">योजनाएँ</a>
 <a href="#diary">डायरी</a>
 </nav>
+<div>
+<button type="button" onclick="toggleLanguage()" id="languageBtn">English</button>
 <button type="button" onclick="document.body.classList.toggle('dark')">🌙 मोड</button>
+</div>
 </header>
 
 <section class="hero">
@@ -77,6 +80,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <div class="card">
 <div class="icon">🏪</div><h3>Mandi Bhav</h3>
+<p>फसल के बाजार भाव खोजें।</p>
 <input id="crop" placeholder="फसल का नाम">
 <input id="state" placeholder="राज्य (वैकल्पिक)">
 <button onclick="mandi()">भाव खोजें</button>
@@ -97,6 +101,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <input id="wDepth" type="number" min="0" placeholder="पानी की गहराई (mm)">
 <button onclick="water()">पानी निकालें</button>
 <div class="result" id="waterOut">परिणाम यहाँ।</div>
+<p class="note">यह अनुमान है; वास्तविक जरूरत खेत की स्थिति पर निर्भर है।</p>
 </div>
 
 <div class="card">
@@ -112,8 +117,8 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="icon">🧪</div><h3>Soil Health Guide</h3>
 <p>खाद का चुनाव करने से पहले मिट्टी की जाँच कराएँ।</p>
 <div class="links">
-<a href="https://soilhealth.dac.gov.in/" target="_blank">Soil Health Card Portal ↗</a>
-<a href="https://icar.org.in/" target="_blank">ICAR ↗</a>
+<a href="https://soilhealth.dac.gov.in/" target="_blank" rel="noopener">Soil Health Card Portal ↗</a>
+<a href="https://icar.org.in/" target="_blank" rel="noopener">ICAR ↗</a>
 </div>
 </div>
 
@@ -143,7 +148,8 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 
 <div class="card">
-<div class="icon">🚜</div><h3>मशीनरी गाइड और किराया</h3>
+<div class="icon">🚜</div><h3>मशीनरी गाइड और किराया अनुमान</h3>
+<p>मशीन चुनें और उसका उपयोग जानें।</p>
 <select id="machineType" onchange="machineInfo()">
 <option value="">मशीन चुनें</option>
 <option value="tractor">ट्रैक्टर</option>
@@ -155,10 +161,18 @@ html,body{max-width:100%;overflow-x:hidden}
 <option value="cultivator">कल्टीवेटर</option>
 </select>
 <div class="result" id="machineInfoOut">मशीन चुनें।</div>
-<input id="machineHours" type="number" min="0" placeholder="काम के घंटे">
-<input id="machineRate" type="number" min="0" placeholder="किराया ₹ प्रति घंटा">
+<label>काम के घंटे</label>
+<input id="machineHours" type="number" min="0" placeholder="जैसे 3">
+<label>किराया (₹ प्रति घंटा)</label>
+<input id="machineRate" type="number" min="0" placeholder="जैसे 700">
 <button onclick="machineCost()">किराया निकालें</button>
 <div class="result" id="machineCostOut">कुल अनुमान यहाँ।</div>
+</div>
+
+<div class="card">
+<div class="icon">🌿</div><h3>बीज और खाद गाइड</h3>
+<p>प्रमाणित बीज चुनें। खाद की मात्रा मिट्टी की जाँच और कृषि विशेषज्ञ की सलाह के अनुसार तय करें।</p>
+<a href="https://icar.org.in/" target="_blank" rel="noopener">ICAR सलाह ↗</a>
 </div>
 
 <div class="card">
@@ -169,35 +183,29 @@ html,body{max-width:100%;overflow-x:hidden}
 </div>
 
 <div class="card">
-<div class="icon">🌿</div><h3>बीज और खाद गाइड</h3>
-<p>प्रमाणित बीज चुनें। खाद की मात्रा मिट्टी की जाँच और कृषि विशेषज्ञ की सलाह के अनुसार तय करें।</p>
-<a href="https://icar.org.in/" target="_blank">ICAR सलाह ↗</a>
-</div>
-
-<div class="card">
 <div class="icon">📰</div><h3>कृषि समाचार</h3>
 <div class="links">
-<a href="https://agricoop.nic.in/" target="_blank">कृषि मंत्रालय ↗</a>
-<a href="https://pib.gov.in/" target="_blank">PIB ↗</a>
-<a href="https://icar.org.in/" target="_blank">ICAR ↗</a>
+<a href="https://agricoop.nic.in/" target="_blank" rel="noopener">कृषि मंत्रालय ↗</a>
+<a href="https://pib.gov.in/" target="_blank" rel="noopener">PIB ↗</a>
+<a href="https://icar.org.in/" target="_blank" rel="noopener">ICAR ↗</a>
 </div>
-<p class="note">ये आधिकारिक वेबसाइट लिंक हैं, लाइव न्यूज़ फीड नहीं।</p>
+<p class="note">आधिकारिक वेबसाइट लिंक; यह लाइव न्यूज़ फीड नहीं है।</p>
 </div>
 </div>
 
-<h2 class="section-title" id="animal">🐄 पशुपालन और डेयरी</h2>
+<h2 class="section-title" id="animal">🐄 पशुपालन और डेयरी टूल्स</h2>
 <div class="grid">
 <div class="card">
 <div class="icon">🐄</div><h3>पशुपालन गाइड</h3>
 <p>पशुओं को साफ, हवादार और सूखी जगह रखें। स्वच्छ पानी और संतुलित चारा दें। टीकाकरण के लिए पशु चिकित्सक से संपर्क करें।</p>
-<a href="https://dahd.nic.in/" target="_blank">पशुपालन विभाग ↗</a>
+<a href="https://dahd.nic.in/" target="_blank" rel="noopener">पशुपालन विभाग ↗</a>
 </div>
 
 <div class="card">
 <div class="icon">🥛</div><h3>डेयरी कमाई कैलकुलेटर</h3>
 <input id="milk" type="number" min="0" placeholder="रोज दूध (लीटर)">
-<input id="milkPrice" type="number" min="0" placeholder="भाव ₹/लीटर">
-<input id="dairyCost" type="number" min="0" placeholder="रोज का खर्च ₹">
+<input id="milkPrice" type="number" min="0" placeholder="दूध का भाव (₹/लीटर)">
+<input id="dairyCost" type="number" min="0" placeholder="रोज का कुल खर्च (₹)">
 <button onclick="dairy()">कमाई निकालें</button>
 <div class="result" id="dairyOut">दैनिक और मासिक अनुमान यहाँ।</div>
 </div>
@@ -205,22 +213,25 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="card">
 <div class="icon">🩺</div><h3>पशु स्वास्थ्य</h3>
 <p>टीकाकरण और स्वास्थ्य जाँच की तारीखें लिखकर रखें। दवा या खुराक पशु चिकित्सक से पूछकर ही दें।</p>
-<a href="https://dahd.nic.in/" target="_blank">आधिकारिक विभाग देखें ↗</a>
+<a href="https://dahd.nic.in/" target="_blank" rel="noopener">आधिकारिक विभाग देखें ↗</a>
 </div>
 </div>
 
 <h2 class="section-title">🌧️ बारिश अलर्ट</h2>
 <div class="card">
-<p>अपने स्थान का नाम डालकर अगले दिनों की बारिश का पूर्वानुमान देखें।</p>
+<p>अपने स्थान का नाम डालकर अगले 5 दिनों की बारिश का पूर्वानुमान देखें।</p>
 <input id="rainPlace" placeholder="शहर / गाँव">
 <button onclick="rain()">पूर्वानुमान देखें</button>
 <div class="result" id="rainOut">पूर्वानुमान यहाँ आएगा।</div>
+<button onclick="enableRainNotifications()">🔔 बारिश अलर्ट चालू करें</button>
+<div class="note" id="rainAlertStatus">60% या अधिक बारिश की संभावना पर अलर्ट दिखेगा।</div>
+<p class="note">पूर्वानुमान बदल सकता है। स्थानीय मौसम विभाग की चेतावनी भी देखें।</p>
 </div>
 
 <h2 class="section-title">🧮 ट्रैक्टर किराया कैलकुलेटर</h2>
 <div class="card">
 <input id="hours" type="number" min="0" placeholder="कुल घंटे">
-<input id="hourRate" type="number" min="0" placeholder="किराया ₹ प्रति घंटा">
+<input id="hourRate" type="number" min="0" placeholder="किराया (₹ प्रति घंटा)">
 <button onclick="tractor()">कुल किराया निकालें</button>
 <div class="result" id="tractorOut">कुल किराया यहाँ।</div>
 </div>
@@ -234,22 +245,31 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <h2 class="section-title" id="schemes">🏛️ सरकारी योजनाएँ और हेल्पलाइन</h2>
 <div class="grid">
-<div class="card"><h3>PM-KISAN</h3><p>किसान सम्मान निधि योजना।</p><a href="https://pmkisan.gov.in/" target="_blank">वेबसाइट खोलें ↗</a></div>
-<div class="card"><h3>फसल बीमा</h3><p>प्रधानमंत्री फसल बीमा योजना।</p><a href="https://pmfby.gov.in/" target="_blank">वेबसाइट खोलें ↗</a></div>
-<div class="card"><h3>MyScheme</h3><p>पात्रता के अनुसार सरकारी योजनाएँ खोजें।</p><a href="https://www.myscheme.gov.in/" target="_blank">योजनाएँ देखें ↗</a></div>
-<div class="card"><h3>किसान कॉल सेंटर</h3><p>कृषि सलाह: 1800-180-1551। उपलब्धता की पुष्टि कॉल पर करें।</p><a href="https://mkisan.gov.in/" target="_blank">mKisan पोर्टल ↗</a></div>
-<div class="card"><h3>कृषि विज्ञान केंद्र</h3><p>अपने जिले का KVK खोजें।</p><a href="https://kvk.icar.gov.in/" target="_blank">KVK पोर्टल ↗</a></div>
+<div class="card"><h3>PM-KISAN</h3><p>किसान सम्मान निधि योजना।</p><a href="https://pmkisan.gov.in/" target="_blank" rel="noopener">वेबसाइट खोलें ↗</a></div>
+<div class="card"><h3>फसल बीमा</h3><p>प्रधानमंत्री फसल बीमा योजना।</p><a href="https://pmfby.gov.in/" target="_blank" rel="noopener">वेबसाइट खोलें ↗</a></div>
+<div class="card"><h3>MyScheme</h3><p>पात्रता के अनुसार सरकारी योजनाएँ खोजें।</p><a href="https://www.myscheme.gov.in/" target="_blank" rel="noopener">योजनाएँ देखें ↗</a></div>
+<div class="card"><h3>किसान कॉल सेंटर</h3><p>कृषि सलाह: 1800-180-1551। उपलब्धता और भाषा की पुष्टि कॉल पर करें।</p><a href="https://mkisan.gov.in/" target="_blank" rel="noopener">mKisan पोर्टल ↗</a></div>
+<div class="card"><h3>कृषि विज्ञान केंद्र</h3><p>अपने जिले का KVK खोजें।</p><a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener">KVK पोर्टल ↗</a></div>
 </div>
 
-<h2 class="section-title" id="diary">📔 खेती खर्च डायरी</h2>
+<h2 class="section-title" id="diary">📔 खेती खर्च डायरी और रिमाइंडर</h2>
 <div class="card">
-<p>बीज, खाद, मजदूरी या सिंचाई का खर्च सेव करें। डेटा इसी ब्राउज़र में रहता है।</p>
+<p>खेती का खर्च और काम सेव करें। डेटा इसी ब्राउज़र में रहता है।</p>
 <input id="entry" placeholder="काम / खर्च का विवरण">
 <input id="entryAmount" type="number" min="0" placeholder="रकम ₹ (वैकल्पिक)">
 <input id="entryDate" type="date">
 <button onclick="addEntry()">सेव करें</button>
 <div id="diaryList"></div>
 <div class="result" id="diaryTotal">कुल दर्ज खर्च: ₹0</div>
+
+<h3>🔔 खेती के काम का रिमाइंडर</h3>
+<input id="reminderText" placeholder="काम, जैसे सिंचाई या खाद डालना">
+<input id="reminderDate" type="date">
+<input id="reminderTime" type="time">
+<button onclick="addReminder()">रिमाइंडर सेव करें</button>
+<button onclick="enableReminderNotifications()">नोटिफिकेशन अनुमति दें</button>
+<div class="result" id="reminderList">सेव किए गए रिमाइंडर यहाँ दिखेंगे।</div>
+<p class="note">रिमाइंडर इसी ब्राउज़र में सेव होते हैं। अलर्ट के लिए वेबसाइट खुली रखें।</p>
 </div>
 </main>
 
@@ -266,25 +286,25 @@ const fmt=n=>Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
 
 async function geo(place){
  const clean=place.trim();
- if(!clean) throw Error('कृपया शहर या गाँव का नाम लिखें।');
+ if(!clean)throw Error('कृपया शहर या गाँव का नाम लिखें।');
  const urls=[
   `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(clean)}&count=10&language=en&format=json&countryCode=IN`,
   `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(clean)}&count=10&language=en&format=json`
  ];
  for(const url of urls){
   const response=await fetch(url);
-  if(!response.ok) continue;
+  if(!response.ok)continue;
   const data=await response.json();
   if(data.results&&data.results.length){
    return data.results.find(x=>x.country_code==='IN')||data.results[0];
   }
  }
- throw Error('स्थान नहीं मिला। शहर का नाम English में लिखें।');
+ throw Error('स्थान नहीं मिला। शहर का नाम English में लिखकर कोशिश करें।');
 }
 
 async function weather(){
  const p=$('place').value.trim();
- if(!p){$('weatherOut').textContent='शहर या गाँव का नाम लिखें।';return}
+ if(!p){$('weatherOut').textContent='शहर या गाँव का नाम लिखें।';return;}
  $('weatherOut').textContent='मौसम खोजा जा रहा है...';
  try{
   const g=await geo(p);
@@ -292,27 +312,48 @@ async function weather(){
   if(!r.ok)throw Error('मौसम सर्वर से जवाब नहीं मिला।');
   const d=await r.json(),c=d.current;
   $('weatherOut').innerHTML=`📍 ${g.name}<br>तापमान: ${c.temperature_2m}°C<br>नमी: ${c.relative_humidity_2m}%<br>हवा: ${c.wind_speed_10m} km/h`;
- }catch(e){$('weatherOut').textContent=e.message+' इंटरनेट जाँचें।'}
+ }catch(e){$('weatherOut').textContent=e.message+' इंटरनेट जाँचें।';}
 }
 
 async function rain(){
  const p=$('rainPlace').value.trim();
- if(!p){$('rainOut').textContent='स्थान लिखें।';return}
+ if(!p){$('rainOut').textContent='स्थान लिखें।';return;}
  $('rainOut').textContent='पूर्वानुमान लोड हो रहा है...';
  try{
   const g=await geo(p);
   const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${g.latitude}&longitude=${g.longitude}&daily=precipitation_probability_max,precipitation_sum&forecast_days=5&timezone=auto`);
-  if(!r.ok)throw Error('पूर्वानुमान उपलब्ध नहीं।');
+  if(!r.ok)throw Error('मौसम डेटा उपलब्ध नहीं।');
   const d=await r.json();
-  $('rainOut').innerHTML=`📍 ${g.name}<br>`+d.daily.time.map((day,i)=>`${day}: बारिश की संभावना ${d.daily.precipitation_probability_max[i]}%, वर्षा ${d.daily.precipitation_sum[i]} mm`).join('<br>');
- }catch(e){$('rainOut').textContent=e.message}
+  const alerts=[];
+  $('rainOut').innerHTML=`📍 ${g.name}<br>`+d.daily.time.map((day,i)=>{
+   const chance=d.daily.precipitation_probability_max[i];
+   const mm=d.daily.precipitation_sum[i];
+   if(chance>=60)alerts.push(`${day}: ${chance}% बारिश की संभावना`);
+   return `${day}: बारिश की संभावना ${chance}%, अनुमानित वर्षा ${mm} mm${chance>=60?' ⚠️':''}`;
+  }).join('<br>');
+  $('rainAlertStatus').textContent=alerts.length?'⚠️ बारिश की अधिक संभावना: '+alerts.join(' | '):'अगले 5 दिनों में 60% या अधिक बारिश की संभावना नहीं दिखी।';
+  if(alerts.length&&'Notification'in window&&Notification.permission==='granted'&&!sessionStorage.getItem('rainAlertShown')){
+   new Notification('FasalNazar बारिश अलर्ट',{body:alerts.join(' | ')});
+   sessionStorage.setItem('rainAlertShown','yes');
+  }
+ }catch(e){$('rainOut').textContent=e.message;}
+}
+
+function enableRainNotifications(){
+ if(!('Notification'in window)){
+  $('rainAlertStatus').textContent='यह ब्राउज़र नोटिफिकेशन सपोर्ट नहीं करता।';
+  return;
+ }
+ Notification.requestPermission().then(p=>{
+  $('rainAlertStatus').textContent=p==='granted'?'नोटिफिकेशन की अनुमति मिल गई। स्थान भरकर पूर्वानुमान देखें।':'नोटिफिकेशन अनुमति नहीं मिली।';
+ });
 }
 
 function mandi(){
  const c=$('crop').value.trim(),s=$('state').value.trim();
- if(!c){$('mandiOut').textContent='फसल का नाम लिखें।';return}
+ if(!c){$('mandiOut').textContent='फसल का नाम लिखें।';return;}
  const q=encodeURIComponent(c+' '+s+' mandi bhav Agmarknet');
- $('mandiOut').innerHTML=`<a target="_blank" href="https://www.google.com/search?q=${q}">मंडी भाव खोजें ↗</a><br><a target="_blank" href="https://agmarknet.gov.in/">Agmarknet पोर्टल ↗</a>`;
+ $('mandiOut').innerHTML=`<a target="_blank" rel="noopener" href="https://www.google.com/search?q=${q}">मंडी भाव खोजें ↗</a><br><a target="_blank" rel="noopener" href="https://agmarknet.gov.in/">Agmarknet सरकारी पोर्टल ↗</a>`;
 }
 
 function seed(){
@@ -326,12 +367,12 @@ function water(){
   $('waterOut').textContent='क्षेत्र और पानी की गहराई शून्य से बड़ी भरें।';return;
  }
  const litres=a*4046.8564224*d;
- $('waterOut').innerHTML=`अनुमानित पानी: <b>${fmt(litres)} लीटर</b><br>लगभग ${fmt(litres/1000)} घन मीटर।`;
+ $('waterOut').innerHTML=`अनुमानित पानी: <strong>${fmt(litres)} लीटर</strong><br>लगभग ${fmt(litres/1000)} घन मीटर।`;
 }
 
 function profit(){
  const y=+$('yield').value,p=+$('price').value,c=+$('cost').value;
- if(y<=0||p<=0||c<0){$('profitOut').textContent='सही मान भरें।';return}
+ if(y<=0||p<=0||c<0){$('profitOut').textContent='सही मान भरें।';return;}
  const sale=y*p;
  $('profitOut').textContent='बिक्री ₹'+fmt(sale)+' | अनुमानित लाभ ₹'+fmt(sale-c);
 }
@@ -341,7 +382,7 @@ function calendar(){
  const m={
  'गेहूँ':'रबी फसल; बुवाई का समय क्षेत्र और किस्म के अनुसार तय करें।',
  'धान':'खरीफ फसल; मानसून और स्थानीय कृषि सलाह देखें।',
- 'सरसों':'रबी फसल; स्थानीय कृषि सलाह देखें।',
+ 'सरसों':'रबी फसल; स्थानीय सलाह देखें।',
  'चना':'रबी फसल; मिट्टी की नमी का ध्यान रखें।',
  'मक्का':'खरीफ/रबी/जायद में उग सकती है; क्षेत्र के अनुसार समय बदलता है।',
  'आलू':'बुवाई का समय क्षेत्र और तापमान के अनुसार बदलता है।'
@@ -362,12 +403,12 @@ function problem(){
 
 function nearMandi(){
  const d=$('district').value.trim();
- $('nearOut').innerHTML=d?`<a target="_blank" href="https://www.google.com/maps/search/${encodeURIComponent('agricultural mandi '+d)}">Maps पर मंडी देखें ↗</a>`:'जिला/शहर लिखें।';
+ $('nearOut').innerHTML=d?`<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/${encodeURIComponent('agricultural mandi '+d)}">Maps पर मंडी देखें ↗</a>`:'जिला/शहर लिखें।';
 }
 
 function dairy(){
  const l=+$('milk').value,p=+$('milkPrice').value,c=+$('dairyCost').value;
- if(l<=0||p<=0||c<0){$('dairyOut').textContent='सही मान भरें।';return}
+ if(l<=0||p<=0||c<0){$('dairyOut').textContent='सही मान भरें।';return;}
  const day=l*p-c;
  $('dairyOut').textContent=`दैनिक अनुमान: ₹${fmt(day)} | 30 दिन का अनुमान: ₹${fmt(day*30)}`;
 }
@@ -379,13 +420,13 @@ function tractor(){
 
 function machineInfo(){
  const data={
- tractor:'खेत की जुताई, ट्रॉली से ढुलाई और अन्य खेत कार्यों में उपयोग।',
- seeddrill:'बीज को कतार और उचित दूरी पर बोने में मदद करती है।',
- rotavator:'मिट्टी को भुरभुरा करने और खेत की तैयारी में उपयोग।',
+ tractor:'खेत की जुताई और ढुलाई में उपयोग।',
+ seeddrill:'बीज को कतार में बोने में मदद करती है।',
+ rotavator:'मिट्टी की तैयारी में उपयोग।',
  reaper:'खड़ी फसल की कटाई के लिए उपयोग।',
  thresher:'दाने को भूसे से अलग करने में उपयोग।',
- sprayer:'फसल पर स्वीकृत कृषि घोल का छिड़काव करने के लिए।',
- cultivator:'खरपतवार नियंत्रण और मिट्टी की गुड़ाई में उपयोग।'
+ sprayer:'फसल पर स्वीकृत कृषि घोल के छिड़काव में उपयोग।',
+ cultivator:'खरपतवार नियंत्रण और गुड़ाई में उपयोग।'
  };
  const key=$('machineType').value;
  $('machineInfoOut').textContent=data[key]||'मशीन चुनें।';
@@ -396,12 +437,12 @@ function machineCost(){
  if(!Number.isFinite(h)||!Number.isFinite(r)||h<=0||r<=0){
   $('machineCostOut').textContent='घंटे और किराया शून्य से बड़ी संख्या में भरें।';return;
  }
- $('machineCostOut').innerHTML=`अनुमानित कुल किराया: <b>₹${fmt(h*r)}</b>`;
+ $('machineCostOut').innerHTML=`अनुमानित कुल किराया: <strong>₹${fmt(h*r)}</strong>`;
 }
 
 function entries(){
- try{return JSON.parse(localStorage.getItem('fasalEntries')||'[]')}
- catch(e){return []}
+ try{return JSON.parse(localStorage.getItem('fasalEntries')||'[]');}
+ catch(e){return [];}
 }
 
 function renderDiary(){
@@ -417,33 +458,8 @@ function renderDiary(){
   const b=document.createElement('button');
   b.textContent='हटाएँ';
   b.onclick=()=>{
-   const a=entries();
-   a.splice(i,1);
+   const a=entries();a.splice(i,1);
    localStorage.setItem('fasalEntries',JSON.stringify(a));
    renderDiary();
   };
-  row.append(t,b);
-  list.append(row);
- });
- $('diaryTotal').textContent='कुल दर्ज खर्च: ₹'+fmt(total);
-}
-
-function addEntry(){
- const text=$('entry').value.trim();
- const date=$('entryDate').value;
- const amount=+$('entryAmount').value||0;
- if(!text||!date){alert('विवरण और तारीख भरें।');return}
- const a=entries();
- a.push({text,date,amount});
- localStorage.setItem('fasalEntries',JSON.stringify(a));
- $('entry').value='';
- $('entryAmount').value='';
- renderDiary();
-}
-
-$('year').textContent=new Date().getFullYear();
-renderDiary();
-</script>
-</body>
- </html>
- 
+  row.append(t,b);list.append(row);
