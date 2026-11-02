@@ -1,255 +1,342 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FasalNazar 🌾</title>
 <style>
+:root{--bg:#f1f8ef;--card:white;--text:#203020;--green:#176b36}
+.dark{--bg:#101b14;--card:#1d2b21;--text:#eff8ef;--green:#83d49a}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f1f8e9;color:#20351f}
-header{background:#176b36;color:white;padding:22px 15px;text-align:center}
-header h1{margin:0 0 8px}
-main{max-width:900px;margin:20px auto;padding:12px}
-.card{background:white;padding:18px;margin:14px 0;border-radius:12px;box-shadow:0 2px 8px #0001}
-h2{color:#176b36;margin-top:0}
-button{background:#218838;color:white;border:0;padding:11px 16px;border-radius:7px;cursor:pointer;margin:5px}
-button:hover{background:#145c2b}
-input{width:100%;padding:11px;margin:7px 0;border:1px solid #bbb;border-radius:6px}
-.result{background:#e8f5e9;padding:12px;border-radius:7px;margin-top:10px;white-space:pre-wrap}
-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
-footer{text-align:center;padding:20px;color:#526b50}
-
-/* Founder section */
-.founder-card{text-align:center;padding:28px 18px}
-.founder-photo{
- width:180px;height:180px;object-fit:cover;
- border-radius:50%;border:5px solid #218838;
- box-shadow:0 4px 14px #0002;
-}
-.founder-name{font-size:25px;font-weight:bold;margin:14px 0 5px;color:#176b36}
-.founder-role{font-weight:bold;color:#218838;margin:5px}
-.founder-bio{max-width:600px;margin:12px auto;line-height:1.6}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{background:#176b36;color:white;text-align:center;padding:22px}
+nav{position:sticky;top:0;background:var(--card);padding:10px;display:flex;flex-wrap:wrap;justify-content:center;gap:5px;z-index:5}
+button,.btn{border:0;border-radius:7px;padding:10px 13px;background:#218838;color:white;cursor:pointer;text-decoration:none;display:inline-block;margin:3px}
+main{max-width:1000px;margin:auto;padding:12px}
+.card{background:var(--card);padding:18px;margin:14px 0;border-radius:12px;box-shadow:0 2px 8px #0001;scroll-margin-top:100px}
+h2{color:var(--green);margin-top:0}
+input,select,textarea{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #aaa;border-radius:7px;background:var(--card);color:var(--text)}
+label{font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.result{background:var(--bg);padding:12px;border-radius:8px;margin-top:10px;white-space:pre-wrap;line-height:1.6}
+.small{font-size:13px;line-height:1.6}
+.item{padding:10px;border-bottom:1px solid #aaa}
+.founder{text-align:center}
+.founder img{width:180px;height:180px;object-fit:cover;border-radius:50%;border:5px solid #218838}
+.founder h3{font-size:26px;color:var(--green)}
+footer{text-align:center;padding:20px}
 </style>
 </head>
 <body>
-
 <header>
 <h1>🌾 FasalNazar</h1>
-<p>Kisano ke liye kheti ka digital saathi</p>
-<nav>
-<button onclick="go('weather')">Mausam</button>
-<button onclick="go('seed')">Beej Calculator</button>
-<button onclick="go('water')">Paani Calculator</button>
-<button onclick="go('profit')">Munafa Calculator</button>
-<button onclick="go('diary')">Kisan Diary</button>
-<button onclick="go('founder')">Founder</button>
-</nav>
+<p id="tagline">किसानों के लिए खेती का डिजिटल साथी</p>
 </header>
+<nav>
+<button onclick="go('weather')">🌦️ मौसम</button>
+<button onclick="go('calculators')">🧮 कैलकुलेटर</button>
+<button onclick="go('mandi')">🏪 मंडी भाव</button>
+<button onclick="go('calendar')">🌱 फसल कैलेंडर</button>
+<button onclick="go('guide')">🩺 फसल गाइड</button>
+<button onclick="go('machinery')">🚜 मशीनरी</button>
+<button onclick="go('dairy')">🐄 डेयरी</button>
+<button onclick="go('diary')">📒 डायरी</button>
+<button onclick="go('reminders')">⏰ रिमाइंडर</button>
+<button onclick="go('kcc')">☎️ सहायता केंद्र</button>
+<button onclick="go('founder')">Founder</button>
+<button onclick="toggleDark()">🌙 Theme</button>
+<button onclick="toggleLanguage()">हिंदी / English</button>
+</nav>
 
 <main>
 <section class="card" id="weather">
-<h2>🌤️ Mausam ki Jankari</h2>
-<input id="city" placeholder="Apne shehar ka naam likhein">
-<button onclick="getWeather()">Mausam Dekhein</button>
-<div class="result" id="weatherResult">Shehar likhkar button dabayein.</div>
+<h2>🌦️ मौसम की जानकारी</h2>
+<label>शहर का नाम</label>
+<input id="city" placeholder="जैसे Agra, Meerut, Delhi">
+<button onclick="getWeather()">मौसम देखें</button>
+<div class="result" id="weatherResult">शहर का नाम डालें।</div>
 </section>
 
-<section class="card" id="seed">
-<h2>🌱 Beej Calculator</h2>
-<label>Khet ka area (acre)</label>
-<input id="seedArea" type="number" min="0" placeholder="Jaise 2">
-<label>Beej ki matra (kg per acre)</label>
-<input id="seedRate" type="number" min="0" placeholder="Jaise 20">
-<button onclick="calcSeed()">Hisab Karein</button>
+<section class="card" id="calculators">
+<h2>🧮 खेती के कैलकुलेटर</h2>
+<div class="grid">
+<div>
+<h3>🌱 बीज कैलकुलेटर</h3>
+<label>क्षेत्रफल (एकड़)</label><input id="seedArea" type="number" min="0">
+<label>बीज (किलो प्रति एकड़)</label><input id="seedRate" type="number" min="0">
+<button onclick="calcSeed()">हिसाब करें</button>
 <div class="result" id="seedResult"></div>
-</section>
-
-<section class="card" id="water">
-<h2>💧 Paani Calculator</h2>
-<label>Khet ka area (acre)</label>
-<input id="waterArea" type="number" min="0" placeholder="Jaise 2">
-<label>Paani (mm)</label>
-<input id="waterDepth" type="number" min="0" placeholder="Jaise 25">
-<button onclick="calcWater()">Paani ka Hisab</button>
+</div>
+<div>
+<h3>💧 पानी कैलकुलेटर</h3>
+<label>क्षेत्रफल (एकड़)</label><input id="waterArea" type="number" min="0">
+<label>पानी की गहराई (mm)</label><input id="waterDepth" type="number" min="0">
+<button onclick="calcWater()">हिसाब करें</button>
 <div class="result" id="waterResult"></div>
+</div>
+<div>
+<h3>💰 मुनाफा कैलकुलेटर</h3>
+<label>पैदावार (क्विंटल)</label><input id="quantity" type="number" min="0">
+<label>भाव (₹ प्रति क्विंटल)</label><input id="price" type="number" min="0">
+<label>कुल खर्च (₹)</label><input id="cost" type="number" min="0">
+<button onclick="calcProfit()">मुनाफा निकालें</button>
+<div class="result" id="profitResult"></div>
+</div>
+</div>
 </section>
 
-<section class="card" id="profit">
-<h2>💰 Munafa Calculator</h2>
-<label>Paidaavar (quintal)</label>
-<input id="quantity" type="number" min="0" placeholder="Jaise 30">
-<label>Bhav (₹ per quintal)</label>
-<input id="price" type="number" min="0" placeholder="Jaise 2200">
-<label>कुल kharcha (₹)</label>
-<input id="cost" type="number" min="0" placeholder="Jaise 15000">
-<button onclick="calcProfit()">Munafa Nikalein</button>
-<div class="result" id="profitResult"></div>
+<section class="card" id="mandi">
+<h2>🏪 मंडी भाव खोजें</h2>
+<label>फसल</label><input id="cropName" placeholder="गेहूँ, धान, आलू">
+<label>मंडी / शहर</label><input id="mandiCity" placeholder="जैसे Agra">
+<button onclick="searchMandi()">भाव खोजें</button>
+<div class="result" id="mandiResult"></div>
+<a href="https://agmarknet.gov.in/" target="_blank" rel="noopener">Agmarknet सरकारी पोर्टल</a>
+<p class="small">यह खोज लिंक है, लाइव मंडी API नहीं।</p>
+</section>
+
+<section class="card" id="calendar">
+<h2>🌱 फसल कैलेंडर</h2>
+<select id="calendarCrop">
+<option value="wheat">गेहूँ</option><option value="rice">धान</option>
+<option value="mustard">सरसों</option><option value="potato">आलू</option>
+<option value="maize">मक्का</option><option value="sugarcane">गन्ना</option>
+</select>
+<button onclick="showCalendar()">जानकारी देखें</button>
+<div class="result" id="calendarResult"></div>
+</section>
+
+<section class="card" id="guide">
+<h2>🩺 फसल समस्या गाइड</h2>
+<select id="problem">
+<option value="yellow">पत्तियाँ पीली होना</option>
+<option value="spots">पत्तियों पर धब्बे</option>
+<option value="dry">पौधे मुरझाना</option>
+<option value="insects">कीट दिखाई देना</option>
+<option value="growth">वृद्धि कम होना</option>
+</select>
+<button onclick="showProblem()">जानकारी देखें</button>
+<div class="result" id="problemResult"></div>
+<p class="small">यह सामान्य जानकारी है, बीमारी का निदान नहीं। कृषि विशेषज्ञ से सलाह लें।</p>
+</section>
+
+<section class="card" id="machinery">
+<h2>🚜 मशीनरी किराया कैलकुलेटर</h2>
+<label>मशीन</label>
+<select id="machineName"><option>ट्रैक्टर</option><option>रोटावेटर</option><option>थ्रेशर</option><option>हार्वेस्टर</option><option>सीड ड्रिल</option></select>
+<label>किराया (₹ प्रति घंटा)</label><input id="machineRate" type="number" min="0">
+<label>काम के घंटे</label><input id="machineHours" type="number" min="0">
+<button onclick="calcMachine()">किराया निकालें</button>
+<div class="result" id="machineResult"></div>
+</section>
+
+<section class="card" id="dairy">
+<h2>🐄 डेयरी आय कैलकुलेटर</h2>
+<label>पशुओं की संख्या</label><input id="animalCount" type="number" min="0">
+<label>प्रति पशु दूध (लीटर प्रतिदिन)</label><input id="milkPerAnimal" type="number" min="0">
+<label>दूध का भाव (₹ प्रति लीटर)</label><input id="milkPrice" type="number" min="0">
+<label>दैनिक खर्च (₹)</label><input id="dairyCost" type="number" min="0">
+<button onclick="calcDairy()">आय निकालें</button>
+<div class="result" id="dairyResult"></div>
 </section>
 
 <section class="card" id="diary">
-<h2>📒 Kisan Diary</h2>
-<input id="diaryText" placeholder="Aaj kheti mein kya kiya?">
-<button onclick="addDiary()">Entry Save Karein</button>
+<h2>📒 किसान डायरी</h2>
+<textarea id="diaryText" rows="3" placeholder="आज खेत में क्या काम किया?"></textarea>
+<button onclick="addDiary()">एंट्री सेव करें</button>
+<button onclick="exportDiary()">डायरी डाउनलोड करें</button>
 <div class="result" id="diaryList"></div>
 </section>
 
-<!-- Founder Section -->
-<section class="card founder-card" id="founder">
-<h2>🌾 Meet Our Founder</h2>
-<img class="founder-photo"
-     src="founder.png"
-     alt="Pankaj Kumar - Founder of FasalNazar">
-<div class="founder-name">Pankaj Kumar</div>
-<div class="founder-role">Founder of FasalNazar</div>
-<p class="founder-bio">
-FasalNazar ki sthapna kisano tak kheti se judi
-upyogi jaankari aur digital suvidhayein pahunchane
-ke uddeshya se ki gayi hai.
-</p>
+<section class="card" id="reminders">
+<h2>⏰ खेती के रिमाइंडर</h2>
+<label>काम का नाम</label><input id="reminderText" placeholder="जैसे सिंचाई">
+<label>तारीख और समय</label><input id="reminderTime" type="datetime-local">
+<button onclick="addReminder()">रिमाइंडर सेव करें</button>
+<div class="result" id="reminderList"></div>
+<p class="small">वेबसाइट खुली रहने पर ही रिमाइंडर जाँच होगा।</p>
+</section>
+
+<section class="card" id="kcc">
+<h2>☎️ किसान सहायता केंद्र</h2>
+<h3>किसान कॉल सेंटर</h3>
+<p>टोल फ्री नंबर: <strong>1800-180-1551</strong></p>
+<a class="btn" href="tel:18001801551">📞 अभी कॉल करें</a>
+<a class="btn" href="https://www.manage.gov.in/kcc/aboutkcc.asp" target="_blank" rel="noopener">आधिकारिक जानकारी</a>
+</section>
+
+<section class="card">
+<h2>🏛️ सरकारी कृषि सेवाएँ</h2>
+<div class="grid">
+<div><h3>PM-KISAN</h3><a href="https://pmkisan.gov.in/" target="_blank" rel="noopener">वेबसाइट खोलें</a></div>
+<div><h3>Soil Health Card</h3><a href="https://soilhealth.dac.gov.in/" target="_blank" rel="noopener">वेबसाइट खोलें</a></div>
+<div><h3>ICAR</h3><a href="https://icar.org.in/" target="_blank" rel="noopener">वेबसाइट खोलें</a></div>
+<div><h3>mKisan</h3><a href="https://mkisan.gov.in/" target="_blank" rel="noopener">वेबसाइट खोलें</a></div>
+</div>
+</section>
+
+<section class="card founder" id="founder">
+<h2>🌾 हमारे Founder</h2>
+<img src="founder.png" alt="Pankaj Kumar - Founder of FasalNazar">
+<h3>Pankaj Kumar</h3>
+<strong>Founder of FasalNazar</strong>
+<p>FasalNazar की स्थापना किसानों तक खेती से जुड़ी उपयोगी जानकारी और डिजिटल सुविधाएँ पहुँचाने के उद्देश्य से की गई है।</p>
 </section>
 </main>
 
-<footer>FasalNazar 🌾 | Kheti ki behtar jankari</footer>
+<footer>🌾 FasalNazar | किसानों का डिजिटल साथी</footer>
 
 <script>
 "use strict";
-
-function byId(id){
- return document.getElementById(id);
-}
-
-function numberValue(id){
- return Number(byId(id).value);
-}
-
-function validNonNegative(...values){
- return values.every(v => Number.isFinite(v) && v >= 0);
-}
-
-function go(id){
- byId(id).scrollIntoView({behavior:"smooth"});
-}
+const $=id=>document.getElementById(id);
+const n=id=>Number($(id).value);
+const fmt=x=>Number(x).toLocaleString("en-IN",{maximumFractionDigits:2});
+function go(id){$(id).scrollIntoView({behavior:"smooth"});}
+function out(id,text){$(id).textContent=text;}
+function valid(...x){return x.every(v=>Number.isFinite(v)&&v>=0);}
 
 function calcSeed(){
- const area=numberValue("seedArea");
- const rate=numberValue("seedRate");
- if(!validNonNegative(area,rate)||area===0||rate===0){
-  byId("seedResult").textContent="Area aur beej ki sahi matra bharein.";
-  return;
- }
- byId("seedResult").textContent=
-  "Kul beej ki zaroorat: "+(area*rate).toFixed(2)+" kg";
+ const a=n("seedArea"),r=n("seedRate");
+ if(!valid(a,r)||a<=0||r<=0)return out("seedResult","सही क्षेत्रफल और बीज दर भरें।");
+ out("seedResult","कुल बीज: "+fmt(a*r)+" किलो");
 }
-
 function calcWater(){
- const area=numberValue("waterArea");
- const depth=numberValue("waterDepth");
- if(!validNonNegative(area,depth)||area===0){
-  byId("waterResult").textContent="Sahi area aur paani ki matra bharein.";
-  return;
- }
- const litres=area*4046.8564224*depth;
- byId("waterResult").textContent=
-  "Anumanit paani: "+Math.round(litres).toLocaleString("en-IN")+" litre";
+ const a=n("waterArea"),d=n("waterDepth");
+ if(!valid(a,d)||a<=0)return out("waterResult","सही क्षेत्रफल और पानी की गहराई भरें।");
+ out("waterResult","अनुमानित पानी: "+fmt(a*4046.8564224*d)+" लीटर");
 }
-
 function calcProfit(){
- const qty=numberValue("quantity");
- const price=numberValue("price");
- const cost=numberValue("cost");
- if(!validNonNegative(qty,price,cost)||qty===0){
-  byId("profitResult").textContent="Paidaavar, bhav aur kharcha sahi bharein.";
-  return;
- }
- const income=qty*price;
- const profit=income-cost;
- byId("profitResult").textContent=
-  "Kul bikri: ₹"+income.toLocaleString("en-IN")+
-  "\nKul kharcha: ₹"+cost.toLocaleString("en-IN")+
-  "\n"+(profit>=0?"Munafa: ₹":"Nuksan: ₹")+
-  Math.abs(profit).toLocaleString("en-IN");
+ const q=n("quantity"),p=n("price"),c=n("cost");
+ if(!valid(q,p,c)||q<=0)return out("profitResult","सभी मान सही भरें।");
+ const income=q*p,net=income-c;
+ out("profitResult","कुल बिक्री: ₹"+fmt(income)+"\nखर्च: ₹"+fmt(c)+"\n"+(net>=0?"मुनाफा: ₹":"नुकसान: ₹")+fmt(Math.abs(net)));
 }
-
-function loadDiary(){
+function calcMachine(){
+ const r=n("machineRate"),h=n("machineHours");
+ if(!valid(r,h)||r<=0||h<=0)return out("machineResult","सही किराया और घंटे भरें।");
+ out("machineResult","अनुमानित किराया: ₹"+fmt(r*h));
+}
+function calcDairy(){
+ const a=n("animalCount"),m=n("milkPerAnimal"),p=n("milkPrice"),c=n("dairyCost");
+ if(!valid(a,m,p,c)||a<=0)return out("dairyResult","सही मान भरें।");
+ const milk=a*m,income=milk*p,net=income-c;
+ out("dairyResult","दैनिक दूध: "+fmt(milk)+" लीटर\nबिक्री: ₹"+fmt(income)+"\nखर्च: ₹"+fmt(c)+"\nअनुमानित आय: ₹"+fmt(net));
+}
+async function getWeather(){
+ const city=$("city").value.trim();
+ if(!city)return out("weatherResult","शहर का नाम भरें।");
+ out("weatherResult","मौसम लोड हो रहा है...");
  try{
-  const entries=JSON.parse(localStorage.getItem("fasalDiary")||"[]");
-  return Array.isArray(entries)?entries:[];
- }catch(error){
-  return [];
- }
+  const g=await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(city)+"&count=1&language=hi&format=json");
+  if(!g.ok)throw Error();
+  const gd=await g.json();
+  if(!gd.results?.length)return out("weatherResult","शहर नहीं मिला।");
+  const p=gd.results[0];
+  const u="https://api.open-meteo.com/v1/forecast?latitude="+p.latitude+"&longitude="+p.longitude+"&current=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=auto";
+  const r=await fetch(u);if(!r.ok)throw Error();
+  const d=await r.json(),c=d.current;
+  out("weatherResult",p.name+", "+p.country+"\nतापमान: "+c.temperature_2m+" °C\nनमी: "+c.relative_humidity_2m+"%\nहवा: "+c.wind_speed_10m+" km/h");
+ }catch(e){out("weatherResult","मौसम नहीं मिला। इंटरनेट जाँचें।");}
 }
+function searchMandi(){
+ const crop=$("cropName").value.trim(),city=$("mandiCity").value.trim();
+ if(!crop||!city)return out("mandiResult","फसल और शहर दोनों भरें।");
+ window.open("https://www.google.com/search?q="+encodeURIComponent(crop+" mandi price "+city+" today"),"_blank");
+ out("mandiResult","खोज का नया टैब खोला गया है।");
+}
+const crops={
+ wheat:"गेहूँ: उत्तर भारत में सामान्यतः अक्टूबर-नवंबर बुवाई, मार्च-अप्रैल कटाई।",
+ rice:"धान: सामान्यतः जून-जुलाई रोपाई, सितंबर-नवंबर कटाई।",
+ mustard:"सरसों: सामान्यतः अक्टूबर-नवंबर बुवाई, फरवरी-मार्च कटाई।",
+ potato:"आलू: सामान्यतः अक्टूबर-नवंबर बुवाई, जनवरी-मार्च खुदाई।",
+ maize:"मक्का: खरीफ, रबी और कुछ क्षेत्रों में जायद में उगाया जाता है।",
+ sugarcane:"गन्ना: क्षेत्र के अनुसार वसंत या शरद ऋतु में बुवाई होती है।"
+};
+function showCalendar(){out("calendarResult",crops[$("calendarCrop").value]);}
+const problems={
+ yellow:"पीली पत्तियाँ पोषक तत्वों की कमी, जलभराव या रोग से हो सकती हैं। मिट्टी और पौधे की जाँच कराएँ।",
+ spots:"धब्बे फफूंद या अन्य कारणों से हो सकते हैं। नमूना कृषि विशेषज्ञ को दिखाएँ।",
+ dry:"पानी की कमी, जड़ों की समस्या या गर्मी कारण हो सकते हैं। मिट्टी की नमी जाँचें।",
+ insects:"कीट की सही पहचान कराएँ। बिना पहचान के कीटनाशक न चुनें।",
+ growth:"मिट्टी, पोषण, पानी, बीज और मौसम की स्थिति जाँचें।"
+};
+function showProblem(){out("problemResult",problems[$("problem").value]);}
 
+function read(key){
+ try{const x=JSON.parse(localStorage.getItem(key)||"[]");return Array.isArray(x)?x:[];}
+ catch(e){return [];}
+}
+function save(key,x){
+ try{localStorage.setItem(key,JSON.stringify(x));return true;}
+ catch(e){alert("ब्राउज़र स्टोरेज में समस्या है।");return false;}
+}
 function renderDiary(){
- const list=byId("diaryList");
- list.replaceChildren();
- const entries=loadDiary();
- if(entries.length===0){
-  list.textContent="Abhi koi entry save nahi hai.";
-  return;
- }
- entries.forEach(entry=>{
-  const row=document.createElement("p");
-  row.textContent=entry;
-  list.appendChild(row);
+ const list=$("diaryList");list.replaceChildren();
+ const a=read("fasalDiary");
+ if(!a.length){list.textContent="अभी कोई एंट्री नहीं है।";return;}
+ a.forEach((v,i)=>{
+  const row=document.createElement("div");row.className="item";
+  const t=document.createElement("span");t.textContent=v.text+" — "+v.date;
+  const b=document.createElement("button");b.textContent="डिलीट";
+  b.onclick=()=>{const x=read("fasalDiary");x.splice(i,1);save("fasalDiary",x);renderDiary();};
+  row.append(t,b);list.append(row);
  });
 }
-
 function addDiary(){
- const text=byId("diaryText").value.trim();
- if(!text){
-  byId("diaryList").textContent="Pehle diary mein kuch likhein.";
-  return;
- }
- const entries=loadDiary();
- entries.unshift(new Date().toLocaleDateString("hi-IN")+" - "+text);
- try{
-  localStorage.setItem("fasalDiary",JSON.stringify(entries));
-  byId("diaryText").value="";
-  renderDiary();
- }catch(error){
-  byId("diaryList").textContent="Entry save nahi ho paayi. Browser storage check karein.";
- }
+ const text=$("diaryText").value.trim();
+ if(!text)return alert("पहले नोट लिखें।");
+ const a=read("fasalDiary");a.unshift({text,date:new Date().toLocaleString("hi-IN")});
+ if(save("fasalDiary",a)){$("diaryText").value="";renderDiary();}
 }
-
-async function getWeather(){
- const city=byId("city").value.trim();
- const result=byId("weatherResult");
- if(!city){
-  result.textContent="Pehle shehar ka naam likhein.";
-  return;
- }
- result.textContent="Mausam ki jankari la rahe hain...";
- try{
-  const geoUrl="https://geocoding-api.open-meteo.com/v1/search?name="+
-   encodeURIComponent(city)+"&count=1&language=hi&format=json";
-  const geoResponse=await fetch(geoUrl);
-  if(!geoResponse.ok) throw new Error("Location service error");
-  const geo=await geoResponse.json();
-  if(!geo.results||geo.results.length===0){
-   result.textContent="Shehar nahi mila. Naam dobara check karein.";
-   return;
+function exportDiary(){
+ const a=read("fasalDiary");
+ if(!a.length)return alert("डायरी खाली है।");
+ const blob=new Blob([a.map(x=>x.date+" : "+x.text).join("\n")],{type:"text/plain;charset=utf-8"});
+ const url=URL.createObjectURL(blob),link=document.createElement("a");
+ link.href=url;link.download="FasalNazar-Diary.txt";link.click();URL.revokeObjectURL(url);
+}
+function renderReminders(){
+ const list=$("reminderList");list.replaceChildren();
+ const a=read("fasalReminders");
+ if(!a.length){list.textContent="अभी कोई रिमाइंडर नहीं है।";return;}
+ a.forEach((v,i)=>{
+  const row=document.createElement("div");row.className="item";
+  const t=document.createElement("span");t.textContent=v.text+" — "+new Date(v.time).toLocaleString("hi-IN");
+  const b=document.createElement("button");b.textContent="डिलीट";
+  b.onclick=()=>{const x=read("fasalReminders");x.splice(i,1);save("fasalReminders",x);renderReminders();};
+  row.append(t,b);list.append(row);
+ });
+}
+function addReminder(){
+ const text=$("reminderText").value.trim(),time=$("reminderTime").value;
+ if(!text||!time)return alert("काम और समय भरें।");
+ if(new Date(time).getTime()<=Date.now())return alert("भविष्य का समय चुनें।");
+ const a=read("fasalReminders");a.push({text,time,notified:false});
+ if(save("fasalReminders",a)){$("reminderText").value="";renderReminders();}
+}
+function checkReminders(){
+ const a=read("fasalReminders");let changed=false;
+ a.forEach(r=>{
+  if(!r.notified&&new Date(r.time).getTime()<=Date.now()){
+   alert("खेती का रिमाइंडर: "+r.text);r.notified=true;changed=true;
   }
-  const place=geo.results[0];
-  const url="https://api.open-meteo.com/v1/forecast?latitude="+
-   place.latitude+"&longitude="+place.longitude+
-   "&current=temperature_2m,relative_humidity_2m,wind_speed_10m";
-  const response=await fetch(url);
-  if(!response.ok) throw new Error("Weather service error");
-  const data=await response.json();
-  const c=data.current;
-  result.textContent=
-   place.name+", "+(place.country||"")+
-   "\nTaapmaan: "+c.temperature_2m+" °C"+
-   "\nNami: "+c.relative_humidity_2m+"%"+
-   "\nHawa ki raftaar: "+c.wind_speed_10m+" km/h";
- }catch(error){
-  result.textContent="Mausam nahi mil paaya. Internet connection check karke dobara koshish karein.";
- }
+ });
+ if(changed)save("fasalReminders",a);
 }
-
-renderDiary();
+function toggleDark(){
+ document.body.classList.toggle("dark");
+ try{localStorage.setItem("fasalDark",document.body.classList.contains("dark")?"1":"0");}catch(e){}
+}
+let english=false;
+function toggleLanguage(){
+ english=!english;
+ $("tagline").textContent=english?"Your Digital Farming Companion":"किसानों के लिए खेती का डिजिटल साथी";
+ alert(english?"Some content remains in Hindi.":"भाषा वापस हिंदी कर दी गई है।");
+}
+try{if(localStorage.getItem("fasalDark")==="1")document.body.classList.add("dark");}catch(e){}
+renderDiary();renderReminders();
+setInterval(checkReminders,30000);
 </script>
 </body>
- </html>
+                            </html>
  
